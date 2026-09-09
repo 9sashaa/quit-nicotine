@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ещё 10 минут — поддержка без никотина</title>
+  <style>
+    :root { color-scheme: dark; --bg:#10151c; --surface:#19222d; --ink:#f4f7fb; --muted:#b5c0cf; --accent:#65d6aa; --warn:#ffd36a; --line:#2d3a48; }
+    * { box-sizing:border-box } body { margin:0; background:radial-gradient(circle at 80% 0,#173d3c 0,transparent 35%),var(--bg); color:var(--ink); font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { max-width:680px; margin:auto; padding:28px 18px 44px; } h1 { font-size:clamp(30px,7vw,48px); line-height:1.05; margin:0 0 12px; } h2 { font-size:21px; margin:0 0 12px; } p { color:var(--muted); margin:0 0 18px; } .card { background:color-mix(in srgb,var(--surface) 91%,transparent); border:1px solid var(--line); border-radius:18px; padding:20px; margin:16px 0; } .timer { font-variant-numeric:tabular-nums; font-size:clamp(54px,15vw,88px); line-height:1; color:var(--accent); letter-spacing:-.06em; margin:12px 0 8px; } button { appearance:none; border:0; border-radius:12px; padding:13px 16px; background:var(--accent); color:#073326; font:inherit; font-weight:700; cursor:pointer; } button.secondary { background:#283545; color:var(--ink); } button:focus-visible { outline:3px solid var(--warn); outline-offset:3px; } .row { display:flex; flex-wrap:wrap; gap:10px; } .row button { flex:1 1 180px; } .steps { padding:0; margin:0; list-style:none; counter-reset:step; } .steps li { position:relative; padding:12px 0 12px 42px; border-top:1px solid var(--line); } .steps li::before { counter-increment:step; content:counter(step); position:absolute; left:0; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:#273646; color:var(--accent); font-weight:700; } .hidden { display:none; } .done { color:var(--accent); font-weight:650; } .small { font-size:14px; } .level { display:grid; grid-template-columns:repeat(10,1fr); gap:5px; margin:16px 0; } .level button { min-height:38px; padding:0; background:#283545; color:var(--ink); border-radius:7px; } .level button.on { background:var(--warn); color:#352400; } .message { min-height:28px; color:var(--accent); font-weight:650; } .start { font-variant-numeric:tabular-nums; color:var(--ink); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Не навсегда.<br>Только ещё 10 минут.</h1>
+  <p>Тяга — волна, а не приказ. Твоя единственная задача сейчас — не использовать никотин до конца таймера.</p>
+  <section class="card" aria-live="polite">
+    <h2>Волна тяги</h2>
+    <div class="timer" id="timer">10:00</div>
+    <p id="timerText">Запусти таймер. Дыши медленно и оставайся здесь.</p>
+    <div class="row"><button id="start">Начать 10 минут</button><button class="secondary" id="reset">Сбросить</button></div>
+  </section>
+  <section class="card">
+    <h2>Сила тяги сейчас</h2>
+    <div class="level" role="group" aria-label="Выбери силу тяги от 1 до 10" id="levels"></div>
+    <div class="message" id="message">Выбери число — я подскажу следующий шаг.</div>
+  </section>
+  <section class="card" id="plan">
+    <h2>Сделай по порядку</h2>
+    <ol class="steps">
+      <li>Выпей стакан холодной воды.</li>
+      <li>Убери сигареты, вейп и зажигалку подальше — хотя бы в другую комнату.</li>
+      <li>Сделай 10 медленных выдохов: выдох длиннее вдоха.</li>
+      <li>Возьми жвачку, леденец или что-то хрустящее.</li>
+      <li>Пройдись 3 минуты или умой лицо прохладной водой.</li>
+    </ol>
+  </section>
+  <section class="card">
+    <h2>Сегодня без никотина</h2>
+    <p class="start" id="since">Нажми «Я выбираю не курить сегодня», чтобы начать отсчёт.</p>
+    <div class="row"><button id="commit">Я выбираю не курить сегодня</button><button class="secondary" id="clear">Начать заново</button></div>
+    <p class="small">Если ты всё же закурил — это не отменяет попытку. Остановись на одной, убери никотин и снова запусти 10 минут.</p>
+  </section>
+  <p class="small">Это инструмент поддержки, не замена врачу. Никотин-заместительная терапия и помощь врача заметно повышают шансы бросить; при беременности, болезнях сердца или приёме лекарств обсуди способ с медработником.</p>
+</main>
+<script>
+  const $=id=>document.getElementById(id); let seconds=600, interval;
+  const messages={1:'Это неприятно, но ты уже управляешь моментом.',2:'Сделай пару глотков воды и запусти таймер.',3:'Выбери одно действие из списка — не нужно делать всё идеально.',4:'Тяга скоро начнёт спадать. Просто не принимай решений о курении сейчас.',5:'Пять из десяти — хорошее время пройтись 3 минуты.',6:'Убери доступ к никотину и напиши кому-то: «Я пережидаю тягу».',7:'Сейчас нужна смена места: встань, умойся, выйди из комнаты.',8:'Тяга сильная, но временна. Дыши: вдох 4, выдох 6. Таймер уже работает на тебя.',9:'Очень сильная волна. Не оставайся с никотином наедине: перейди туда, где его нет, и позвони близкому.',10:'Критический момент: никаких покупок и «одной затяжки». Вода, движение, 10 минут. Если чувствуешь, что можешь навредить себе — позвони в экстренную помощь или человеку рядом.'};
+  for(let i=1;i<=10;i++){const b=document.createElement('button'); b.textContent=i; b.onclick=()=>{document.querySelectorAll('#levels button').forEach(x=>x.classList.remove('on'));b.classList.add('on');$('message').textContent=messages[i];if(i>=7&&!interval)$('start').click()};$('levels').append(b)}
+  function draw(){const m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0');$('timer').textContent=`${m}:${s}`}
+  $('start').onclick=()=>{if(interval)return; $('start').textContent='Таймер идёт';$('timerText').textContent='Ты делаешь самое важное: не куришь эту волну.';interval=setInterval(()=>{if(--seconds<=0){clearInterval(interval);interval=null;seconds=0;$('start').textContent='Ещё 10 минут';$('timerText').textContent='Волна пережита. Выбери ещё 10 минут — это твоя победа.'}draw()},1000)};
+  $('reset').onclick=()=>{clearInterval(interval);interval=null;seconds=600;draw();$('start').textContent='Начать 10 минут';$('timerText').textContent='Запусти таймер. Дыши медленно и оставайся здесь.'};
+  function showSince(){const t=localStorage.quitStart;if(!t)return;const min=Math.max(0,Math.floor((Date.now()-Number(t))/60000));$('since').textContent=`Ты выбрал(а) не курить: ${min<60?min+' мин':Math.floor(min/60)+' ч '+min%60+' мин'} назад.`;$('commit').textContent='Я продолжаю сегодня'}
+  $('commit').onclick=()=>{if(!localStorage.quitStart)localStorage.quitStart=Date.now();showSince()};$('clear').onclick=()=>{localStorage.removeItem('quitStart');$('since').textContent='Нажми «Я выбираю не курить сегодня», чтобы начать отсчёт.';$('commit').textContent='Я выбираю не курить сегодня'}; showSince();setInterval(showSince,30000);
+</script>
+</body>
+</html>
